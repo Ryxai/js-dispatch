@@ -1,0 +1,18 @@
+{
+  "name": "js-dispatch",
+  "version": "1.0.0",
+  "description": "A server to dispatch files from an route when a correct key is provided (private javascript deployment)",
+  "main": "index.ts",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Ryxai",
+  "license": "MIT",
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
+}
