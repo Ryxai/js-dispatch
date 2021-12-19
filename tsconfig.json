@@ -1,5 +1,11 @@
 {
   "extends": "@tsconfig/node16/tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "rootdir": "./",
+     "esModuleInterop": true
+  },
   "include": ["src/**/*"],
   "exclude": ["node_modules","**/*.spec.ts"]
 }
