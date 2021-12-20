@@ -19,7 +19,7 @@ const publicKey  = process.env.PUBLIC_KEY;
 let hash_alg = process.env.HASH_ALG;
 const {mappings : route_config } : {mappings: Mapping[]} = require('map_config.json');
 const files: {[file_path: string]: string} = {};
-route_config.map(({route, file_path}) => (files[file_path.toString()] = fs.readFileSync(file_path, "utf-8")));
+route_config.map(({file_path}) => (files[file_path.toString()] = fs.readFileSync(file_path, "utf-8")));
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
