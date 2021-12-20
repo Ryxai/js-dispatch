@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "A server to dispatch files from an route when a correct key is provided (private javascript deployment)",
   "main": "index.ts",
+  "typings": "main.d.ts",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
   },
   "author": "Ryxai",
   "license": "MIT",
@@ -13,13 +16,18 @@
     "@azure/keyvault-secrets": "^4.3.0",
     "@tsconfig/node16": "^1.0.2",
     "@types/dotenv": "^8.2.0",
+    "@types/dotenv-parse-variables": "^2.0.1",
     "@types/express": "^4.17.13",
+    "@types/gapi": "^0.0.41",
     "@types/jsrsasign": "^8.0.13",
     "@types/node": "^17.0.1",
     "@types/typescript": "^2.0.0",
     "dotenv": "^10.0.0",
+    "dotenv-parse-variables": "^2.0.0",
     "express": "^4.17.2",
-    "jsrsasign": "^10.5.1"
+    "googleapis": "^92.0.0",
+    "jsrsasign": "^10.5.1",
+    "jsrsasign-util": "^1.0.5"
   },
   "devDependencies": {
     "typescript": "^4.5.4"
