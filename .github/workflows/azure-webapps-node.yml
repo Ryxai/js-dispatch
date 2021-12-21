@@ -30,7 +30,7 @@ jobs:
     - name: Create file
       run: |
         echo "PORT=${{secrets.PORT}}\nPUBLIC_KEY=${{secrets.PUBLIC_KEY}}\nHASH_ALG=${{secrets.HASH_ALG}}\nMAP_CONFIG=${{secrets.MAP_CONFIG}}" > .env
-        ls
+        ls -alrth
 
     - name: npm install and build
       run: |
