@@ -31,7 +31,7 @@ jobs:
       run: |
         mkdir config
         cd config
-        echo "{"port":"${{secrets.PORT}}","publicKey":"${{secrets.PUBLIC_KEY}}","hash_alg":"${{secrets.HASH_ALG}}","map_config":"${{secrets.MAP_CONFIG}}"}" > default.json
+        echo "{\"port\":\"${{secrets.PORT}}\",\"publicKey\":\"${{secrets.PUBLIC_KEY}}\",\"hash_alg\":\"${{secrets.HASH_ALG}}\",\"map_config\":\"${{secrets.MAP_CONFIG}}\"}" > default.json
         ls
         cd ..
 
