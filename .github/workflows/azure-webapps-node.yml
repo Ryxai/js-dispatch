@@ -29,8 +29,11 @@ jobs:
     
     - name: Create file
       run: |
-        echo "{"port":"${{secrets.PORT}}","publicKey":"${{secrets.PUBLIC_KEY}}","hash_alg":"${{secrets.HASH_ALG}}","map_config":"${{secrets.MAP_CONFIG}}"}" > ./config/default.json
-        ls config
+        mkdir config
+        cd config
+        echo "{"port":"${{secrets.PORT}}","publicKey":"${{secrets.PUBLIC_KEY}}","hash_alg":"${{secrets.HASH_ALG}}","map_config":"${{secrets.MAP_CONFIG}}"}" > default.json
+        ls
+        cd ..
 
     - name: npm install and build
       run: |
