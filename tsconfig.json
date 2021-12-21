@@ -4,9 +4,9 @@
     "module": "commonjs",
     "typeRoots": ["./types"],
     "target": "es6",
-    "rootDir": "./",
+    "rootDir": "./src",
     "esModuleInterop": true,
-    "outDir": "build/"
+    "outDir": "./"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules","**/*.spec.ts"]
