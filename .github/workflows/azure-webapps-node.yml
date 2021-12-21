@@ -41,15 +41,14 @@ jobs:
         cache: 'npm'
     
     - name: Setup map config
-      uses: "finnp/create-file-action@master"
-        env:
-            FILE_NAME: "./.env"
-            FILE_DATA: "PORT=${{secrets.PORT}}\nPUBLIC_KEY=${{secrets.PUBLIC_KEY}}\nHASH_ALG=${{secrets.HASH_ALG}}\nMAP_CONFIG=${{secrets.MAP_CONFIG}}"
-    - name: npm install, build, and test
+      uses: finnp/create-file-action@master
+      env:
+          FILE_NAME: "./.env"
+          FILE_DATA: "PORT=${{secrets.PORT}}\nPUBLIC_KEY=${{secrets.PUBLIC_KEY}}\nHASH_ALG=${{secrets.HASH_ALG}}\nMAP_CONFIG=${{secrets.MAP_CONFIG}}"
+    - name: npm install and build
       run: |
         npm install
         npm run build --if-present
-        npm run test --if-present
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
