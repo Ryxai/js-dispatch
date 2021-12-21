@@ -2,7 +2,7 @@
   "name": "js-dispatch",
   "version": "1.0.0",
   "description": "A server to dispatch files from an route when a correct key is provided (private javascript deployment)",
-  "main": "index.ts",
+  "main": "build/src/index.js",
   "typings": "main.d.ts",
   "scripts": {
     "start": "node ./build/src/index.js",
