@@ -12,12 +12,14 @@ if (dotenv_config.error || !dotenv_config.parsed) {
   throw dotenv_config.error;
 }
 dotenvParseVariables(dotenv_config.parsed,{assignToProcessEnv: true, overrideProcessEnv: true});
-console.log(dotenv_config.parsed);
 const port = process.env.PORT;
 const app = express();
 const publicKey  = process.env.PUBLIC_KEY;
 let hash_alg = process.env.HASH_ALG;
-const {mappings : route_config } : {mappings: Mapping[]} = require('map_config.json');
+if (!process.env.MAP_CONFIG){
+  throw "No configuration mapping"
+}
+const {mappings : route_config } : {mappings: Mapping[]} = JSON.parse(process.env.MAP_CONFIG);
 const files: {[file_path: string]: string} = {};
 route_config.map(({file_path}) => (files[file_path.toString()] = fs.readFileSync(file_path, "utf-8")));
 app.listen(port, () => {

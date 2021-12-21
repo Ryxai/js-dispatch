@@ -5,6 +5,7 @@
   "main": "index.ts",
   "typings": "main.d.ts",
   "scripts": {
+    "start": "node ./build/src/index.js",
     "test": "test",
     "build": "tsc --build",
     "clean": "tsc --build --clean"
