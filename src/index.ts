@@ -1,25 +1,19 @@
 import express from "express";
 import sign from "jsrsasign";
-import dotenv from "dotenv";
+import config from "config";
 import fs from "fs";
-import dotenvParseVariables from "dotenv-parse-variables";
 
 import {Mapping} from "./main";
 
 console.log("Initializing");
-const dotenv_config = dotenv.config();
-if (dotenv_config.error || !dotenv_config.parsed) {
-  throw dotenv_config.error;
-}
-dotenvParseVariables(dotenv_config.parsed,{assignToProcessEnv: true, overrideProcessEnv: true});
-const port = process.env.PORT;
+const port : number = config.get('port');
 const app = express();
-const publicKey  = process.env.PUBLIC_KEY;
-let hash_alg = process.env.HASH_ALG;
-if (!process.env.MAP_CONFIG){
+const publicKey : string = config.get('publicKey');
+let hash_alg : string = config.get('hash_alg');
+if (!config.has('map_config')){
   throw "No configuration mapping"
 }
-const {mappings : route_config } : {mappings: Mapping[]} = JSON.parse(process.env.MAP_CONFIG);
+const {mappings : route_config } : {mappings: Mapping[]} = JSON.parse(config.get("map_config"));
 const files: {[file_path: string]: string} = {};
 route_config.map(({file_path}) => (files[file_path.toString()] = fs.readFileSync(file_path, "utf-8")));
 app.listen(port, () => {
@@ -31,12 +25,9 @@ route_config.map(({route, file_path }) => (app.get(route, (req, res) => {
     res.status(200).send(files[file_path]);
   }
   else {
-    const sig_text = req.body["auth"];
+    const sig_text : string = req.body["auth"];
     if ('alg' in req.body) {
       hash_alg = req.body["alg"];
-    }
-    if (!publicKey) {
-      throw "Public key note defined";
     }
     const pub = sign.KEYUTIL.getKey(publicKey);
     const text = `${file_path}${hash_alg}`;
