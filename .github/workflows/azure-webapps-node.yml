@@ -19,8 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: test
-      run: ls
+    
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
@@ -28,12 +27,11 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
     
-    - name: Setup map config
-      uses: finnp/create-file-action@master
-      env:
-          FILE_NAME: ".env"
-          FILE_DATA: "PORT=${{secrets.PORT}}\nPUBLIC_KEY=${{secrets.PUBLIC_KEY}}\nHASH_ALG=${{secrets.HASH_ALG}}\nMAP_CONFIG=${{secrets.MAP_CONFIG}}"
-    
+    - name: Create file
+      run: |
+        echo "PORT=${{secrets.PORT}}\nPUBLIC_KEY=${{secrets.PUBLIC_KEY}}\nHASH_ALG=${{secrets.HASH_ALG}}\nMAP_CONFIG=${{secrets.MAP_CONFIG}}" > .env
+        ls
+
     - name: npm install and build
       run: |
         npm install
