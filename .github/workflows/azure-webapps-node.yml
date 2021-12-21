@@ -41,10 +41,10 @@ jobs:
         cache: 'npm'
     
     - name: Setup map config
-      uses: "finnp/create-file-action@master"
-        env:
-            FILE_NAME: "./.env"
-            FILE_DATA: "PORT=${{secrets.PORT}}\nPUBLIC_KEY=${{secrets.PUBLIC_KEY}}\nHASH_ALG=${{secrets.HASH_ALG}}\nMAP_CONFIG=${{secrets.MAP_CONFIG}}"
+      uses: finnp/create-file-action@master
+      env:
+          FILE_NAME: "./.env"
+          FILE_DATA: "PORT=${{secrets.PORT}}\nPUBLIC_KEY=${{secrets.PUBLIC_KEY}}\nHASH_ALG=${{secrets.HASH_ALG}}\nMAP_CONFIG=${{secrets.MAP_CONFIG}}"
     - name: npm install, build, and test
       run: |
         npm install
