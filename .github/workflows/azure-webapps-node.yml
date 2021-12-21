@@ -8,11 +8,14 @@ env:
   AZURE_WEBAPP_NAME: js-dispatch   # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '16.x'                # set this to the node version to use
-  url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+        name: "Deployment"
+        url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     steps:
     - uses: actions/checkout@v2
 
