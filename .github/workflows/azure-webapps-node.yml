@@ -27,7 +27,7 @@ jobs:
     - name: Checkout google_roam
       uses: actions/checkout@v2
       with:
-        repository: Ryxai/roam-google
+        repository: Ryxai/roamjs-google
         path: "roam-google"
 
     - name: Cd into roam-google
