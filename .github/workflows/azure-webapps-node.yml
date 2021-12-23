@@ -21,6 +21,8 @@ jobs:
         url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     steps:
     - uses: actions/checkout@v2
+      with:
+        path: "js-dispatch"
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
@@ -28,22 +30,12 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
 
-    - name: Create working dir for routes
-      run: |
-        cd ..
-        ls
-        mkdir routes_workingdir
-        cd routes_workingdir
-
-    - name: Roam-google initalization
-      run: |
-        mkdir roam-google
-        cd roam-google
 
     - name: Checkout google_roam
       uses: actions/checkout@v2
       with:
         repository: Ryxai/roam-google
+        path: "roam-google"
 
     - name: Build roam-google - npm install and build
       run: |
@@ -51,7 +43,9 @@ jobs:
         npm install
         npm run build
         cd ..
-        mv roam-google/build/main.js 
+        mv roam-google/build/main.js js-dispatch/routes/roam-google.js
+        rm -rf roam-google
+        cd js-dispatch
     
     - name: Create config and public key files
       run: |
