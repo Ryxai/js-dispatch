@@ -31,7 +31,9 @@ jobs:
         path: "roam-google"
 
     - name: Cd into roam-google
-      run: cd roam-google
+      run: |
+        cd roam-google
+        ls
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
