@@ -8,9 +8,12 @@ env:
   AZURE_WEBAPP_NAME: ${{secrets.DISPATCH}}   # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '16.x'                # set this to the node version to use
+  GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+  GOOGLE_REDIRECT_URL: ${{secrets.API_URL}}
 
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
     environment:
@@ -19,26 +22,50 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    
-
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
+
+    - name: Create working dir for routes
+      run: |
+        cd ..
+        ls
+        mkdir routes_workingdir
+        cd routes_workingdir
+
+    - name: Roam-google initalization
+      run: |
+        mkdir roam-google
+        cd roam-google
+
+    - name: Checkout google_roam
+      uses: actions/checkout@v2
+      with:
+        repository: Ryxai/roam-google
+
+    - name: Build roam-google - npm install and build
+      run: |
+        cd roam-google
+        npm install
+        npm run build
+        cd ..
+        mv roam-google/build/main.js 
     
-    - name: Create file
+    - name: Create config and public key files
       run: |
         mkdir config
         cd config
-        echo '{"port":"${{secrets.PORT}}","publicKey":"${{secrets.PUBLIC_KEY}}","hash_alg":"${{secrets.HASH_ALG}}","map_config":"${{secrets.MAP_CONFIG}}"}' > default.json
+        echo '{"port":"${{secrets.PORT}}","hash_alg":"${{secrets.HASH_ALG}}","map_config":"${{secrets.MAP_CONFIG}}"}' > default.json
         ls
         cd ..
+        echo "${{secrets.PUBLIC_KEY}}" > key
 
     - name: npm install and build
       run: |
         npm install
-        npm run build --if-present
+        npm run build
         
     - name: 'Deploy to Azure WebApp'
       id: deploy-to-webapp 
