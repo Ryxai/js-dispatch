@@ -24,6 +24,15 @@ jobs:
       with:
         path: "js-dispatch"
 
+    - name: Checkout google_roam
+      uses: actions/checkout@v2
+      with:
+        repository: Ryxai/roam-google
+        path: "roam-google"
+
+    - name: Cd into roam-google
+      run: cd roam-google
+
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
@@ -31,15 +40,8 @@ jobs:
         cache: 'npm'
 
 
-    - name: Checkout google_roam
-      uses: actions/checkout@v2
-      with:
-        repository: Ryxai/roam-google
-        path: "roam-google"
-
-    - name: Build roam-google - npm install and build
+    - name: Build roam-google - npm install and build - cleanup
       run: |
-        cd roam-google
         npm install
         npm run build
         cd ..
