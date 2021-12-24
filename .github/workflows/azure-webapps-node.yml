@@ -26,6 +26,8 @@ jobs:
         repository: Ryxai/roamjs-google
         path: "roam-google"
 
+   - run: ls
+
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
@@ -99,6 +101,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: [roam-google,config,key,build]
     environment:
         name: "Deployment"
         url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
