@@ -37,7 +37,7 @@ jobs:
         npm run build
 
     - name: Rename file
-      run: mv build/main.js build/roam-google.js
+      run: mv build/main.js build/roam_google.js
 
     - name: Upload roam-google
       uses: actions/upload-artifact@v2
