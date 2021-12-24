@@ -25,8 +25,6 @@ jobs:
       with:
         repository: Ryxai/roamjs-google
 
-    - run: ls
-
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
@@ -133,16 +131,6 @@ jobs:
       with:
         name: roam-google
         path: ./routes/
-
-    - name: Check all directories and files listed properly before deploy
-      run: |
-        ls
-        cd config
-        ls
-        cd ..
-        cd routes
-        ls
-        cd ..
 
     - name: 'Deploy to Azure WebApp'
       id: deploy-to-webapp 
