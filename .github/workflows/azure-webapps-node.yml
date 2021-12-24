@@ -14,15 +14,11 @@ env:
 
 jobs:
 
-  build:
+  roam-google:
     runs-on: ubuntu-latest
     environment:
-        name: "Deployment"
-        url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      name: "Deployment"
     steps:
-    - uses: actions/checkout@v2
-      with:
-        path: "js-dispatch"
 
     - name: Checkout google_roam
       uses: actions/checkout@v2
@@ -30,10 +26,59 @@ jobs:
         repository: Ryxai/roamjs-google
         path: "roam-google"
 
-    - name: Cd into roam-google
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Install and build
       run: |
-        cd roam-google
-        ls
+        npm install
+        npm run build
+
+    - name: Upload roam-google
+      uses: actions/upload-artifact@v2
+      with:
+        name: roam-google
+        path: build/src/main.js
+
+  config:
+    runs-on: ubuntu-latest
+    environment:
+      name: "Deployment"
+    steps:
+
+    - name: Make config.json
+      run: echo '{"port":"${{secrets.PORT}}","hash_alg":"${{secrets.HASH_ALG}}","map_config":"${{secrets.MAP_CONFIG}}"}' > default.json
+
+    - name: Upload config
+      uses: actions/upload-artifact@v2
+      with:
+        name: default.json
+        path: default.json
+
+  key:
+    runs-on: ubuntu-latest
+    environment:
+      name: "Deployment"
+    steps:
+
+    - name: Compose keyfile
+      run: echo "${{secrets.PUBLIC_KEY}}" > key
+
+    - name: Upload key
+      uses: actions/upload-artifact@v2
+      with:
+        name: keyfile
+        path: "key"
+
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: "Deployment"
+    steps:
+    - uses: actions@checkout@v2
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
@@ -41,30 +86,59 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
 
-
-    - name: Build roam-google - npm install and build - cleanup
-      run: |
-        npm install
-        npm run build
-        cd ..
-        mv roam-google/build/main.js js-dispatch/routes/roam-google.js
-        rm -rf roam-google
-        cd js-dispatch
-    
-    - name: Create config and public key files
-      run: |
-        mkdir config
-        cd config
-        echo '{"port":"${{secrets.PORT}}","hash_alg":"${{secrets.HASH_ALG}}","map_config":"${{secrets.MAP_CONFIG}}"}' > default.json
-        ls
-        cd ..
-        echo "${{secrets.PUBLIC_KEY}}" > key
-
     - name: npm install and build
       run: |
         npm install
         npm run build
-        
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: node-app
+        path: .
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+        name: "Deployment"
+        url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    steps:
+
+    - name: Download dispatch
+      uses: actions/download-artifact@v2
+      with:
+        name: node-app
+
+    - name: Make configuration directory
+      run: mkdir config
+
+    - name: Download config
+      uses: actions/download-artifact@v2
+      with:
+        name: default.json
+        path: ./config/
+
+    - name: Download key
+      uses: actions/download-artifact@v2
+      with:
+        name: keyfile
+
+    - name: Download roam-google
+      uses: actions/download-artifact@v2
+      with:
+        name: roam-google
+        path: ./routes/
+
+    - name: Check all directories and files listed properly before deploy
+      run: |
+        ls
+        cd config
+        ls
+        cd ..
+        cd routes
+        ls
+        cd ..
+
     - name: 'Deploy to Azure WebApp'
       id: deploy-to-webapp 
       uses: azure/webapps-deploy@v2
