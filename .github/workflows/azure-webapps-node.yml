@@ -42,7 +42,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: roam-google
-        path: build/src/main.js
+        path: build/main.js
 
   config:
     runs-on: ubuntu-latest
