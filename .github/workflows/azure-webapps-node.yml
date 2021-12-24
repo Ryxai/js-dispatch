@@ -38,11 +38,14 @@ jobs:
         npm install
         npm run build
 
+    - name: Rename file
+      run: mv build/main.js build/roam-google.js
+
     - name: Upload roam-google
       uses: actions/upload-artifact@v2
       with:
         name: roam-google
-        path: build/main.js
+        path: build/roam-google.js
 
   config:
     runs-on: ubuntu-latest
