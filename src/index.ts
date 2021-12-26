@@ -25,8 +25,10 @@ route_config.map(({file_path}) => (files[file_path.toString()] = fs.readFileSync
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
-
+console.log("Route configurations");
+console.log(`${process.env.GOOGLE_AUTH_ROUTE}: google`)
 app.get(`${process.env.GOOGLE_AUTH_ROUTE}`, (req, res) => {
+  console.log(`Oauth request from ${req.ips.join(" ")}`)
   axios.post("https://oauth2.googleapis.com/token", {
         ...req.body,
         client_id: process.env.GOOGLE_CLIENT_ID,
@@ -44,10 +46,13 @@ app.get(`${process.env.GOOGLE_AUTH_ROUTE}`, (req, res) => {
     res.status(500).send(e.response?.data || {message: e.message});
     })
 });
+console.log(`${OAUTH_SUCCESS}: oauth_success`);
 app.get(OAUTH_SUCCESS,(req, res) => {
   res.send(`${OAUTH_SUCCESS}.html`);
 })
+route_config.map(({route, file_path}) => console.log(`${route}:${file_path}`));
 route_config.map(({route, file_path }) => (app.post(route, (req, res) => {
+  console.log(`Request for ${route} from ${req.ips.join(" ")}`);
   if (route == "/"){
     res.status(200).send(files[file_path]);
   }
@@ -69,6 +74,7 @@ route_config.map(({route, file_path }) => (app.post(route, (req, res) => {
     }
   }
 })));
+console.log("All others: index");
 app.get("*", (req, res) =>{
   res.send("index");
 })
