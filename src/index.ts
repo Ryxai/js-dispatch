@@ -6,7 +6,7 @@ import axios from "axios";
 import bp from "body-parser";
 import {Mapping} from "./main";
 
-const OAUTH_SUCCESS : string = "ouath_success";
+const OAUTH_SUCCESS : string = "ouath_success.html";
 
 const pb = fs.readFileSync("key","binary");
 console.log("Initializing");
@@ -16,7 +16,7 @@ app.use(bp.json());
 app.use(bp.urlencoded({extended: true}));
 const publicKey = sign.KEYUTIL.getKey(pb);
 let hash_alg : string = config.get('hash_alg');
-let google_route : string = config.get('google_route');
+let google_route : string = config.get('google_auth_route');
 let google_client_id : string = config.get('google_client_id');
 let google_client_secret : string = config.get("google_client_secret");
 let api_url : string = config.get("api_url");
@@ -80,7 +80,7 @@ route_config.map(({route, file_path }) => (app.post(route, (req, res) => {
 })));
 console.log("All others: index");
 app.get("*", (req, res) =>{
-  res.send("index");
+  res.send("index.html");
 })
 
 
