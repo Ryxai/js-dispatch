@@ -6,8 +6,8 @@ import axios from "axios";
 import bp from "body-parser";
 import {Mapping} from "./main";
 
-const OAUTH_SUCCESS : string = "ouath_success.html";
 
+//Initialization
 const pb = fs.readFileSync("key","binary");
 console.log("Initializing");
 const port : number = config.get('port');
@@ -16,14 +16,25 @@ app.use(bp.json());
 app.use(bp.urlencoded({extended: true}));
 const publicKey = sign.KEYUTIL.getKey(pb);
 let hash_alg : string = config.get('hash_alg');
-let google_route : string = config.get('google_auth_route');
-let google_client_id : string = config.get('google_client_id');
-let google_client_secret : string = config.get("google_client_secret");
-let api_url : string = config.get("api_url");
+const OAUTH_SUCCESS : string = "ouath_success.html";
+if (!config.has('google_auth_route')){
+  throw "No auth route"
+}
+const google_route : string = config.get('google_auth_route');
+const google_client_id : string = config.get('google_client_id');
+const google_client_secret : string = config.get("google_client_secret");
+const api_url : string = config.get("api_url");
+
+//Logging
 if (!config.has('map_config')){
   throw "No configuration mapping"
 }
 const {mappings : route_config } : {mappings: Mapping[]} = JSON.parse(config.get("map_config"));
+console.log(`Hash alg: ${hash_alg}`);
+console.log(`Google Route: ${google_route}`)
+console.log(`Google client id: ${google_client_id}`);
+console.log(`API URL: ${api_url}`);
+
 const files: {[file_path: string]: string} = {};
 route_config.map(({file_path}) => (files[file_path.toString()] = fs.readFileSync(file_path, "utf-8")));
 app.listen(port, () => {
@@ -31,7 +42,7 @@ app.listen(port, () => {
 });
 console.log("Route configurations");
 console.log(`${google_route}: google`)
-app.get(`${google_route}`, (req, res) => {
+app.get(google_route, (req, res) => {
   console.log(`Oauth request from ${req.ips.join(" ")}`)
   axios.post("https://oauth2.googleapis.com/token", {
         ...req.body,
