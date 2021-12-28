@@ -16,6 +16,10 @@ app.use(bp.json());
 app.use(bp.urlencoded({extended: true}));
 const publicKey = sign.KEYUTIL.getKey(pb);
 let hash_alg : string = config.get('hash_alg');
+let google_route : string = config.get('google_route');
+let google_client_id : string = config.get('google_client_id');
+let google_client_secret : string = config.get("google_client_secret");
+let api_url : string = config.get("api_url");
 if (!config.has('map_config')){
   throw "No configuration mapping"
 }
@@ -26,14 +30,14 @@ app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
 console.log("Route configurations");
-console.log(`${process.env.GOOGLE_AUTH_ROUTE}: google`)
-app.get(`${process.env.GOOGLE_AUTH_ROUTE}`, (req, res) => {
+console.log(`${google_route}: google`)
+app.get(`${google_route}`, (req, res) => {
   console.log(`Oauth request from ${req.ips.join(" ")}`)
   axios.post("https://oauth2.googleapis.com/token", {
         ...req.body,
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET,
-        redirect_url: `${process.env.API_URL}/${OAUTH_SUCCESS}`
+        client_id: google_client_id,
+        client_secret: google_client_secret,
+        redirect_url: `${api_url}/${OAUTH_SUCCESS}`
       }
   ).then((r) => {
     req.body["grant_types"] === "authorization_code"

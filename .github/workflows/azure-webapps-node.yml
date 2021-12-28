@@ -8,10 +8,6 @@ env:
   AZURE_WEBAPP_NAME: ${{secrets.DISPATCH}}   # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '16.x'                # set this to the node version to use
-  GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
-  GOOGLE_CLIENT_SECRET : ${{secrets.GOOGLE_CLIENT_SECRET}}
-  GOOGLE_REDIRECT_URL: ${{secrets.API_URL}}
-  API_URL : ${secrets.API_URL}}
 
 
 jobs:
@@ -54,7 +50,15 @@ jobs:
     steps:
 
     - name: Make config.json
-      run: echo '{"port":"${{secrets.PORT}}","hash_alg":"${{secrets.HASH_ALG}}","map_config":"${{secrets.MAP_CONFIG}}"}' > default.json
+      run: echo '{
+                    "port":"${{secrets.PORT}}",
+                    "hash_alg":"${{secrets.HASH_ALG}}",
+                    "map_config":"${{secrets.MAP_CONFIG}}",
+                    "google_auth_route":"${{secrets.GOOGLE_AUTH_ROUTE}}",
+                    "google_client_id":"${{secrets.GOOGLE_CLIENT_ID}}",
+                    "google_client_secret":"${{secrets.GOOGLE_CLIENT_SECRET}}",
+                    "api_url":"${{secrets.api_url}}"
+                  }' > default.json
 
     - name: Upload config
       uses: actions/upload-artifact@v2
