@@ -112,11 +112,6 @@ jobs:
         name: default.json
         path: ./config/
 
-    - name: Download key
-      uses: actions/download-artifact@v2
-      with:
-        name: keyfile
-
     - name: Download roam-google
       uses: actions/download-artifact@v2
       with:
