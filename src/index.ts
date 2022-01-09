@@ -1,21 +1,19 @@
 import express from "express";
-import sign from "jsrsasign";
 import config from "config";
 import fs from "fs";
 import axios from "axios";
 import bp from "body-parser";
-import gapi from "googleapis";
 import {Mapping} from "./main";
 
 
 //Initialization
-const pb = fs.readFileSync("key","binary");
+const pb = fs.readFileSync("./key","binary");
+console.log(pb);
 console.log("Initializing");
 const port : number = config.get('port');
 const app = express();
 app.use(bp.json());
 app.use(bp.urlencoded({extended: true}));
-const publicKey = sign.KEYUTIL.getKey(pb);
 let hash_alg : string = config.get('hash_alg');
 if (!config.has('google_auth_route')){
   throw "No auth route"
@@ -56,30 +54,9 @@ const files: {[file_path: string]: string} = {};
 route_config.map(({file_path}) => (files[file_path.toString()] = fs.readFileSync(file_path, "utf-8")));
 route_config.map(({route, file_path}) => console.log(`${route}:${file_path}`));
 route_config.map(({route, file_path }) => (app.post(route, (req, res) => {
-  console.log(`Request for ${route} from ${req.ips.join(" ")}`);
-  if (route == "/"){
-    res.status(200).send(files[file_path]);
-  }
-  else {
-    let sig_text : string = req.body.auth;
-    if ('alg' in req.body) {
-      hash_alg = req.body.alg;
-    }
-    const date : Date = new Date();
-    const text = `${date.getDay()}${date.getHours()}`;
-    const sig = new sign.KJUR.crypto.Signature({alg: hash_alg});
-    sig.init(publicKey);
-    sig.updateString(text);
-    if (sig.verify(sig_text)) {
-      res.send(files[file_path]);
-    }
-    else {
-      res.status(401).send("Unauthorized");
-    }
-  }
+  console.log(`Request for ${route} from ${req.ip}`);
+  res.send(files[file_path]);
 })));
-
-//Google Auth Routes
 
 
 console.log("Route configurations");
@@ -89,7 +66,7 @@ app.get(googleAuthRoute, (req, res) => {
   const postData = {
     ...req.body,
     client_id: googleClientID,
-    client_secret: googleClientID,
+    client_secret: googleClientSecret,
     redirect_url: `${apiUrl}/${oauthSuccessRoute}`
   };
   axios.post("https://oauth2.googleapis.com/token", postData).then((r) => {

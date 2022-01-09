@@ -66,21 +66,6 @@ jobs:
         name: default.json
         path: default.json
 
-  key:
-    runs-on: ubuntu-latest
-    environment:
-      name: "Deployment"
-    steps:
-
-    - name: Compose keyfile
-      run: echo "${{secrets.PUBLIC_KEY}}" > key
-
-    - name: Upload key
-      uses: actions/upload-artifact@v2
-      with:
-        name: keyfile
-        path: "key"
-
   build:
     runs-on: ubuntu-latest
     environment:
