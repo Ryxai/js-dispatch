@@ -92,7 +92,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [roam-google, config, key, build]
+    needs: [roam-google, config, build]
     environment:
         name: "Deployment"
         url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
