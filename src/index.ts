@@ -7,8 +7,6 @@ import {Mapping} from "./main";
 
 
 //Initialization
-const pb = fs.readFileSync("./key","binary");
-console.log(pb);
 console.log("Initializing");
 const port : number = config.get('port');
 const app = express();
