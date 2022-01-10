@@ -52,7 +52,6 @@ jobs:
     - name: Make config.json
       run: echo '{
                     "port":"${{secrets.PORT}}",
-                    "hash_alg":"${{secrets.HASH_ALG}}",
                     "map_config":"${{secrets.MAP_CONFIG}}",
                     "google_auth_route":"${{secrets.GOOGLE_AUTH_ROUTE}}",
                     "google_client_id":"${{secrets.GOOGLE_CLIENT_ID}}",
