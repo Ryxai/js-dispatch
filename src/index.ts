@@ -34,7 +34,7 @@ app.listen(port, () => {
 //Handling default public
 console.log("mapping standard routes");
 app.get("/",(req,res) => {
-   res.sendFile(`${__dirname}/public/index.html`);
+   res.sendFile(`${__dirname}/public/indx.html`);
 });
 app.get(`/${oauthSuccessRoute}`,(req, res) => {
   res.sendFile(`${__dirname}/public/oauth_success.html`);
